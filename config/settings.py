@@ -1,6 +1,4 @@
-
 from pydantic_settings import BaseSettings
-
 
 class Settings(BaseSettings):
 
@@ -13,6 +11,9 @@ class Settings(BaseSettings):
     jwt_secret: str
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
+    access_token_expire_hours: int | None = None
+
+    gemini_api_key: str
 
     class Config:
         env_file = ".env"

@@ -95,8 +95,10 @@ class AuthService:
 
         expire = (
             datetime.now(timezone.utc)
-            + timedelta(
-                minutes=settings.access_token_expire_minutes
+            + (
+                timedelta(hours=settings.access_token_expire_hours)
+                if settings.access_token_expire_hours is not None
+                else timedelta(minutes=settings.access_token_expire_minutes)
             )
         )
 
