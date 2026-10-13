@@ -15,6 +15,10 @@ class Settings(BaseSettings):
 
     gemini_api_key: str
 
+    gmail_address: str
+    gmail_app_password: str
+    otp_secret: str
+
     class Config:
         env_file = ".env"
 

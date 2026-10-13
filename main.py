@@ -21,6 +21,10 @@ from fastapi import Depends
 
 from routers.chat import router as chat_router
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
 embedding_service = EmbeddingService()
 retrieval_service = RetrievalService()
 
@@ -34,6 +38,16 @@ app = FastAPI(
     debug=settings.debug
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Middleware
 app.add_middleware(

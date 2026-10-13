@@ -28,14 +28,12 @@ class RetrievalService:
                 }
             },
             {
-                "$project": {
-                    "_id": 0,
-                    "text": 1,
-                    "document_id": {"$toString": "$document_id"},
-                    "score": {
-                        "$meta": "vectorSearchScore"
-                    }
-                }
+                     "$project": {
+                             "_id": 0,
+                             "text": 1,
+                             "document_id": 1,
+                             "score": {"$meta": "vectorSearchScore"}
+                                 }
             }
         ]
 

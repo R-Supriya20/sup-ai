@@ -3,7 +3,8 @@ class PromptService:
     def create_prompt(
         self,
         question: str,
-        retrieved_chunks: list
+        retrieved_chunks: list,
+        conversation: list
     ):
 
         context = "\n\n".join(
@@ -11,24 +12,29 @@ class PromptService:
             for chunk in retrieved_chunks
         )
 
-        prompt = f"""
-You are an AI customer support assistant.
+        history = "\n".join(
+            f"{message['role']}: {message['content']}"
+            for message in conversation[-6:]
+        )
 
-Answer the user's question using ONLY the information
-provided in the context.
+        
+def build_prompt(question: str, context: str = "") -> str:
+    return f"""
+You are a helpful AI customer support assistant.
 
-If the answer is not available in the context,
-say: "I don't have enough information to answer that."
+Instructions:
+1. Answer the user's question using your general knowledge.
+2. Use the supplied document context when it is relevant.
+3. If the context does not contain the answer, answer
+   using your general knowledge instead.
+4. Never claim that general knowledge is an official company policy.
+5. If you are uncertain, clearly say so.
 
-Do not make up information.
-
-Context:
-{context}
+Document context:
+{context if context else "No relevant documents found."}
 
 User question:
 {question}
 
 Answer:
 """
-
-        return prompt

@@ -21,7 +21,8 @@ def chat(
 
     result = rag_service.answer(
         question=data.question,
-        user_id=str(current_user["_id"])
+        user_id=str(current_user["_id"]),
+        conversation_id=data.conversation_id
     )
 
     return result
