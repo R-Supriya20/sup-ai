@@ -9,6 +9,7 @@ class UserRepository:
 
 
     def find_by_email(self, email: str):
+        email = email.strip().lower()
         return self.collection.find_one({"email": email})
 
 

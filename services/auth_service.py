@@ -15,47 +15,37 @@ user_repository = UserRepository()
 
 class AuthService:
 
-
     def register_user(
         self,
         email: str,
-        password: str
+        password: str,
+        email_verified: bool = False
     ):
+        email = email.strip().lower()
 
-        existing_user = user_repository.find_by_email(
-            email
-        )
+        existing_user = user_repository.find_by_email(email)
 
         if existing_user:
+            raise ValueError("User already exists")
 
-            raise ValueError(
-                "User already exists"
-            )
-
-
-        hashed_password = password_hasher.hash(
-            password
-        )
-
+        hashed_password = password_hasher.hash(password)
 
         user_data = {
             "email": email,
             "password": hashed_password,
             "role": "user",
-            "created_at": datetime.now(timezone.utc)
+            "email_verified": email_verified,
+            "created_at": datetime.now(timezone.utc),
         }
 
-
-        user_id = user_repository.create_user(
-            user_data
-        )
-
+        user_id = user_repository.create_user(user_data)
 
         return {
             "id": str(user_id),
             "email": email,
-            "role": "user"
+            "role": "user",
         }
+
 
 
     def authenticate_user(
@@ -63,29 +53,27 @@ class AuthService:
         email: str,
         password: str
     ):
-
-        user = user_repository.find_by_email(
-            email
-        )
+        user = user_repository.find_by_email(email)
 
         if not user:
-
             return None
 
-
         try:
-
             password_hasher.verify(
                 user["password"],
                 password
             )
-
         except Exception:
-
             return None
 
+        # Check email verification
+        if not user.get("email_verified", False):
+            raise ValueError(
+                "Please verify your email before logging in."
+            )
 
         return user
+
 
 
     def create_access_token(
