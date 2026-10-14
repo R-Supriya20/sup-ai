@@ -12,13 +12,16 @@ class LLMService:
             api_key=settings.gemini_api_key
         )
 
-    def generate(self, prompt: str):
+    def generate(self, prompt: str) -> str:
+        if not prompt or not prompt.strip():
+            raise ValueError("LLM prompt is empty.")
+
         try:
             response = self.client.models.generate_content(
-                model="gemini-3.8-flash ",
+                model="gemini-3.5-flash-lite",
                 contents=prompt
             )
-            return response.text
+            return response.text or ""
 
         except errors.APIError as exc:
             print("Gemini API error:", exc)
